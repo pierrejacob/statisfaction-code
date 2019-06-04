@@ -25,12 +25,15 @@ registerDoParallel(cores = detectCores()-2) # to run on multiple cores if availa
 library(doRNG) # there will be random numbers!
 library(dplyr) # some data frame will be manipulated!
 library(ggplot2) # there will be plots!
+
+# actually the rest of the code also relies on lme4, tidyr, truncnorm, gridExtra
+
 theme_set(theme_bw()) # a sober theme and various graphical tweaks
-# theme_update(axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20),
-#              axis.title.x = element_text(size = 25, margin=margin(20,0,0,0)),
-#              axis.title.y = element_text(size = 25, angle = 90, margin = margin(0,20,0,0)),
-#              legend.text = element_text(size = 20), legend.title = element_text(size = 20), title = element_text(size = 30),
-#              strip.text = element_text(size = 25), strip.background = element_rect(fill="white"), legend.position = "bottom")
+theme_update(axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20),
+             axis.title.x = element_text(size = 25, margin=margin(20,0,0,0)),
+             axis.title.y = element_text(size = 25, angle = 90, margin = margin(0,20,0,0)),
+             legend.text = element_text(size = 20), legend.title = element_text(size = 20), title = element_text(size = 30),
+             strip.text = element_text(size = 25), strip.background = element_rect(fill="white"), legend.position = "bottom")
 
 
 # Sample from maximally coupled variables following p and q
@@ -178,11 +181,11 @@ NREP <- 1e3
 lag_example1 <- 10
 meetingtimes_example1 <- foreach(irep = 1:NREP) %dorng% {meetingtimes(rinit, single_kernel, coupled_kernel, lag_example1) }
 
-niterations <- 6
-ubounds <- sapply(1:niterations, function(t) tv_upper_bound(unlist(meetingtimes_example1), lag_example1, t))
-g <- qplot(x = 1:niterations, y = ubounds, geom = "line") + scale_x_continuous(breaks = 1:niterations) + ylab("TV upper bounds") + xlab("iteration")
-g <- g + labs(title = "Example 1: baseball") + ylim(0,1)
-g
+niterations_example1 <- 6
+ubounds_example1 <- sapply(1:niterations_example1, function(t) tv_upper_bound(unlist(meetingtimes_example1), lag_example1, t))
+g_tvbounds_examples1 <- qplot(x = 1:niterations_example1, y = ubounds_example1, geom = "line") + scale_x_continuous(breaks = 1:niterations_example1) + ylab("TV upper bounds") + xlab("iteration")
+g_tvbounds_examples1 <- g_tvbounds_examples1 + labs(title = "Example 1: baseball") + ylim(0,1)
+g_tvbounds_examples1
 ## it seems that the Gibbs sampler has essentially converged in less than 4 steps
 ## we can check: let's run many chains for e.g. 4 steps, and compare the posterior marginals
 ## with approximation obtained with one long chain
@@ -300,11 +303,11 @@ NREP <- 1e3
 lag_example2 <- 500
 meetingtimes_example2 <- foreach(irep = 1:NREP) %dorng% { meetingtimes(rinit, single_kernel, coupled_kernel, lag_example2)}
 
-niterations <- 5e2
-ubounds <- sapply(1:niterations, function(t) tv_upper_bound(unlist(meetingtimes_example2), lag_example2, t))
-g <- qplot(x = 1:niterations, y = ubounds, geom = "line")
-g <- g + ylab("TV upper bounds") + xlab("iteration") + labs(title = "Example 2: Dyestuff") + ylim(0,1)
-g
+niterations_example2 <- 5e2
+ubounds_example2 <- sapply(1:niterations_example2, function(t) tv_upper_bound(unlist(meetingtimes_example2), lag_example2, t))
+g_tvbounds_examples2 <- qplot(x = 1:niterations_example2, y = ubounds_example2, geom = "line")
+g_tvbounds_examples2 <- g_tvbounds_examples2 + ylab("TV upper bounds") + xlab("iteration") + labs(title = "Example 2: dyestuff") + ylim(0,1)
+g_tvbounds_examples2
 
 
 ## it seems that the Gibbs sampler has essentially converged in less than 1000 steps
@@ -448,11 +451,11 @@ meetingtimes_example3 <- foreach(irep = 1:NREP) %dorng% {
   meetingtimes(rinit, single_kernel, coupled_kernel, lag_example3)
 }
 
-niterations <- 4e2
-ubounds <- sapply(1:niterations, function(t) tv_upper_bound(unlist(meetingtimes_example3), lag_example3, t))
-g <- qplot(x = 1:niterations, y = ubounds, geom = "line")
-g <- g + ylab("TV upper bounds") + xlab("iteration") + labs(title = "Example 3: ordinal probit") + ylim(0,1)
-g
+niterations_example3 <- 4e2
+ubounds_example3 <- sapply(1:niterations_example3, function(t) tv_upper_bound(unlist(meetingtimes_example3), lag_example3, t))
+g_tvbounds_examples3 <- qplot(x = 1:niterations_example3, y = ubounds_example3, geom = "line")
+g_tvbounds_examples3 <- g_tvbounds_examples3 + ylab("TV upper bounds") + xlab("iteration") + labs(title = "Example 3: ordinal probit") + ylim(0,1)
+g_tvbounds_examples3
 
 
 ## we can check: let's run many chains for e.g. 300 steps, and compare the posterior marginals
@@ -483,4 +486,9 @@ g3 <- qplot(x = longchain[,3], geom = "blank") + geom_density() + geom_density(a
 gridExtra::grid.arrange(g1, g2, g3, nrow = 1)
 ## indeed the marginal distributions look very similar!!
 
+
+# ggsave(filename = "2019-06-assessing-3.png", plot = gridExtra::grid.arrange(g_tvbounds_examples3, nrow = 1),
+#        width = 7, height = 7)
+# ggsave(filename = "2019-06-assessing-12.png", plot = gridExtra::grid.arrange(g_tvbounds_examples1, g_tvbounds_examples2, nrow = 1),
+#        width = 12, height = 7)
 
