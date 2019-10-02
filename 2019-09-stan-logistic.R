@@ -1,3 +1,5 @@
+## September 2019, Pierre E. Jacob
+
 ## This script illustrates how one can use the log pdf and its gradient
 ## from a stan fit object and implement an algorithm of our choice;
 ## here a coupled HMC algorithm a la Heng & Jacob 2019 https://arxiv.org/abs/1709.00404
@@ -8,7 +10,7 @@
 ## thanks to all who contributed to those
 
 ## disclaimer: this is meant to be proof of concept, this code has not been
-## thoroughly tested, if you re-use any of this code, please be aware of the risk
+## thoroughly tested; you're welcome to re-use any of this but at your own risk
 
 ## The model and data are taken from  https://data.princeton.edu/pop510/hospmle
 ## and https://data.princeton.edu/pop510/hospStan
