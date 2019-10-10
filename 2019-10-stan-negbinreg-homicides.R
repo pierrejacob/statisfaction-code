@@ -500,8 +500,8 @@ gridExtra::grid.arrange(hist1bb, hist2bb, hist3bb, hist4bb, nrow = 2, ncol = 2)
 ## obtain signed measure representations of the distributions
 cchainsdf_ <- unbiasedmcmc::c_chains_to_dataframe(coupled_chains, k, m, dopar = TRUE)
 cchainsbbdf_ <- unbiasedmcmc::c_chains_to_dataframe(coupled_chains_bayesbag, k, m, dopar = TRUE)
-subiterations <- floor(seq(from = 1, to = nrow(cchainsdf_2), length.out = 1000))
-subiterationsbb <- floor(seq(from = 1, to = nrow(cchainsbbdf_2), length.out = 1000))
+subiterations <- floor(seq(from = 1, to = nrow(cchainsdf_), length.out = 1000))
+subiterationsbb <- floor(seq(from = 1, to = nrow(cchainsbbdf_), length.out = 1000))
 ## sort by ascending order of certain components and sum weights
 cchainsdf_2 <- cchainsdf_ %>% select(rep, weight, atom.2) %>% arrange(atom.2) %>% mutate(cumw = cumsum(weight))
 cchainsbbdf_2 <- cchainsbbdf_ %>% select(rep, weight, atom.2) %>% arrange(atom.2) %>% mutate(cumw = cumsum(weight))
